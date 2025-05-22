@@ -1,0 +1,40 @@
+{
+  "name": "fork-sync",
+  "version": "1.0.0",
+  "description": "A Node.js CLI tool for auto syncing GitHub forks with upstream repositories, including intelligent conflict resolution",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "github",
+    "fork",
+    "sync",
+    "upstream",
+    "merge",
+    "automation",
+    "conflict-resolution",
+    "llm"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "simple-git": "^3.23.0",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.9",
+    "openai": "^4.26.0",
+    "dotenv": "^16.4.1",
+    "commander": "^11.1.0",
+    "winston": "^3.11.0",
+    "octokit": "^3.1.2",
+    "yaml": "^2.3.4",
+    "chalk": "^4.1.2"
+  },
+  "bin": {
+    "fork-sync": "./index.js"
+  }
+}
