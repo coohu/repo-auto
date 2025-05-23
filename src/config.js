@@ -67,22 +67,22 @@ function loadConfigFile(configPath) {
  * @throws {Error} If configuration is invalid
  */
 function validateConfig(config) {
-  // Check if accounts are defined
-  if (!config.accounts || typeof config.accounts !== 'object' || Array.isArray(config.accounts)) {
-    throw new Error('Configuration must include an "accounts" object');
+  // Check if account are defined
+  if (!config.account || typeof config.account !== 'object' || Array.isArray(config.account)) {
+    throw new Error('Configuration must include an "account" object');
   }
 
   // Validate the account
-  const account = config.accounts; // Renaming for clarity within this scope
+  const account = config.account; // Renaming for clarity within this scope
   if (!account.token) {
-    throw new Error('Missing GitHub token in "accounts"');
+    throw new Error('Missing GitHub token in "account"');
   }
   
   if (!account.repos || !Array.isArray(account.repos) || account.repos.length === 0) {
-    throw new Error('"accounts.repos" must be a non-empty array');
+    throw new Error('"account.repos" must be a non-empty array');
   }
   
-  // Validate each repo entry in accounts.repos
+  // Validate each repo entry in account.repos
   for (const repoEntry of account.repos) {
     if (!repoEntry.upstream || typeof repoEntry.upstream !== 'string') {
       throw new Error(`Missing or invalid "upstream" field in repository entry: ${JSON.stringify(repoEntry)}. Must be a string.`);

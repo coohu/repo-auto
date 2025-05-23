@@ -29,8 +29,6 @@ program.name('fork-sync')
 // Main command
 program.option('-c, --config <path>', 'Path to configuration file', './config.json')
   .option('-r, --run-once', 'Run sync once and exit (no scheduling)', false)
-  .option('-a, --account <name>', 'Sync only the specified account')
-  .option('-p, --repository <repo>', 'Sync only the specified repository')
   .option('-v, --verbose', 'Enable verbose output', false)
   .action(async (options) => {
     try {
@@ -53,18 +51,12 @@ program.option('-c, --config <path>', 'Path to configuration file', './config.js
       // If run-once is specified, run the sync process once and exit
       if (options.runOnce) {
         logger.info('Running one-time sync process...');
-        await startSync(config, {
-          accountFilter: options.account,
-          repoFilter: options.repository
-        });
+        await startSync(config);
         logger.info('One-time sync process completed.');
       } else {
         // Otherwise, set up the scheduler according to the configuration
         logger.info('Setting up scheduled sync process...');
-        setupScheduler(config, {
-          accountFilter: options.account,
-          repoFilter: options.repository
-        });
+        setupScheduler(config);
         logger.info(`Scheduler configured with cron expression: ${config.schedule}`);
         logger.info('Fork Sync CLI is now running. Press Ctrl+C to exit.');
       }

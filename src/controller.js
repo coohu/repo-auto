@@ -18,28 +18,16 @@ const { configureLogger } = require('./modules/logger');
 /**
  * Start the sync process for all configured repositories
  * @param {Object} config - Application configuration
- * @param {Object} options - Optional filters and settings
- * @param {string} options.accountFilter - Filter to specific account
- * @param {string} options.repoFilter - Filter to specific repository
  * @returns {Promise<Object>} - Summary of sync results
  */
-async function startSync(config, options = {}) {
+async function startSync(config) {
   // Configure logger based on config settings
   if (config.logOptions) {
     configureLogger(config.logOptions);
   }
 
-  logger.info('Starting fork sync process', { options });
-
-  // config.accounts is now a single object
-  const account = config.accounts;
-
-  // Check if account name matches if filter is provided
-  if (options.accountFilter && account.name !== options.accountFilter) {
-    logger.warn(`Account name "${account.name}" does not match filter "${options.accountFilter}". Skipping.`);
-    return { success: false, message: 'Account name does not match filter' };
-  }
-
+  // config.account is now a single object
+  const account = config.account;
   if (!account) {
     logger.warn('No account configuration found.');
     return { success: false, message: 'No account configuration found' };
@@ -56,22 +44,8 @@ async function startSync(config, options = {}) {
 
   // Process the single account
   logger.info(`Processing account: ${account.name}`);
-  
-  // Filter repositories if specified
-  // options.repoFilter should now match the 'fork' or 'upstream' string like "owner/repo:branch"
-  const reposToProcess = options.repoFilter
-    ? account.repos.filter(repoConfig => repoConfig.fork === options.repoFilter || repoConfig.upstream === options.repoFilter)
-    : account.repos;
-  
-  if (reposToProcess.length === 0) {
-    logger.warn(`No repositories found matching filter: ${options.repoFilter} for account: ${account.name}`);
-    // If there was a filter, and nothing matched, it's not an overall failure, just no work for this filter.
-    // If there wasn't a filter, and repo list is empty, it's a config issue handled by config validation.
-    // So, we don't `continue` here, but let it proceed to send a report if needed.
-  }
-  
-  // Process each repository configuration
-  for (const repoConfig of reposToProcess) {
+
+  for (const repoConfig of account.repos) {
     try {
       // Pass the repoConfig object, the single account, and the main config
       const repoResult = await syncRepository(repoConfig, account, config);
@@ -96,11 +70,10 @@ async function startSync(config, options = {}) {
       results.details.push({
         repository: repoIdentifier,
         account: account.name,
-          success: false,
-          status: 'error',
-          error: error.message
-        });
-      }
+        success: false,
+        status: 'error',
+        error: error.message
+      });
     }
   }
   

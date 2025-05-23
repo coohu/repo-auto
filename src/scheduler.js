@@ -21,7 +21,7 @@ const activeTasks = {sync: null, report: null};
  * @param {string} options.accountFilter - Filter to specific account
  * @param {string} options.repoFilter - Filter to specific repository
  */
-function setupScheduler(config, options = {}) {
+function setupScheduler(config) {
   // Clean up any existing tasks
   stopScheduler();
   
@@ -61,7 +61,6 @@ function setupScheduler(config, options = {}) {
       }
     });
   }
-  
   logger.info('Scheduler setup completed');
 }
 

@@ -1,10 +1,10 @@
 {
-  "accounts": {
-    "name": "DevPersonal",
+  "account": {
+    "name": "coohu",
     "token": "${GITHUB_TOKEN_PERSONAL}",
     "repos": [
-      {"upstream":"apache/src-proj:main","fork":"me/my-proj:ssy"},
-      {"upstream":"apache/src-proj2:main","fork":"me/my-proj2:ssy"}
+      {"upstream":"/lich0821/WeChatFerry:master","fork":"/coohu/WeChatFerry:dev"},
+      {"upstream":"/ttttupup/wxhelper:main","fork":"/coohu/wxhelper:dev"}
     ]
   },
   "email": {
