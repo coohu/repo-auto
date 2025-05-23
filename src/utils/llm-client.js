@@ -32,6 +32,7 @@ function initializeLLMClient(config) {
 
   if (llmConfig.provider.toLowerCase() === 'openai') {
     openai = new OpenAI({
+      baseurl:llmConfig.url,
       apiKey: llmConfig.apiKey,
     });
     logger.info(`OpenAI client initialized with model: ${llmConfig.model}`);

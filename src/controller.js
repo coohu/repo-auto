@@ -154,11 +154,7 @@ async function syncRepository(repoFullName, account, config) {
   }
   
   // Initialize Git client
-  const git = new GitClient({
-    repoDir,
-    token: account.token,
-    logger: sessionLogger
-  });
+  const git = new GitClient({repoDir, token: account.token, logger: sessionLogger});
   
   try {
     // Initialize repository (clone if needed)

@@ -1,26 +1,12 @@
 {
-  "accounts": [
-    {
-      "name": "DevPersonal",
-      "token": "${GITHUB_TOKEN_PERSONAL}",
-      "repos": [
-        "apache/rocketmq-client-go",
-        "facebook/react"
-      ],
-      "devBranch": "dev",
-      "upstreamBranch": "main"
-    },
-    {
-      "name": "WorkAccount",
-      "token": "${GITHUB_TOKEN_WORK}",
-      "repos": [
-        "nodejs/node",
-        "nestjs/nest"
-      ],
-      "devBranch": "develop",
-      "upstreamBranch": "master"
-    }
-  ],
+  "accounts": {
+    "name": "DevPersonal",
+    "token": "${GITHUB_TOKEN_PERSONAL}",
+    "repos": [
+      {"upstream":"apache/src-proj:main","fork":"me/my-proj:ssy"},
+      {"upstream":"apache/src-proj2:main","fork":"me/my-proj2:ssy"}
+    ]
+  },
   "email": {
     "smtpHost": "smtp.example.com",
     "smtpPort": 587,
@@ -41,6 +27,7 @@
   "llm": {
     "provider": "openai",
     "model": "gpt-4",
+    "url": "https://api.openai.com/v1/chat/completions",
     "apiKey": "${OPENAI_API_KEY}",
     "maxRetries": 3
   },
