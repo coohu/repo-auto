@@ -68,36 +68,35 @@ function loadConfigFile(configPath) {
  */
 function validateConfig(config) {
   // Check if accounts are defined
-  if (!config.accounts || !Array.isArray(config.accounts) || config.accounts.length === 0) {
-    throw new Error('Configuration must include at least one account');
+  if (!config.accounts || typeof config.accounts !== 'object' || Array.isArray(config.accounts)) {
+    throw new Error('Configuration must include an "accounts" object');
   }
 
-  // Validate each account
-  for (const [index, account] of config.accounts.entries()) {
-    if (!account.token) {
-      throw new Error(`Missing GitHub token for account at index ${index}`);
+  // Validate the account
+  const account = config.accounts; // Renaming for clarity within this scope
+  if (!account.token) {
+    throw new Error('Missing GitHub token in "accounts"');
+  }
+  
+  if (!account.repos || !Array.isArray(account.repos) || account.repos.length === 0) {
+    throw new Error('"accounts.repos" must be a non-empty array');
+  }
+  
+  // Validate each repo entry in accounts.repos
+  for (const repoEntry of account.repos) {
+    if (!repoEntry.upstream || typeof repoEntry.upstream !== 'string') {
+      throw new Error(`Missing or invalid "upstream" field in repository entry: ${JSON.stringify(repoEntry)}. Must be a string.`);
     }
-    
-    if (!account.repos || !Array.isArray(account.repos) || account.repos.length === 0) {
-      throw new Error(`Account ${account.name || index} must include at least one repository`);
+    if (!repoEntry.fork || typeof repoEntry.fork !== 'string') {
+      throw new Error(`Missing or invalid "fork" field in repository entry: ${JSON.stringify(repoEntry)}. Must be a string.`);
     }
-    
-    // Ensure each repo has proper format (owner/repo)
-    for (const repo of account.repos) {
-      if (!/^[^/]+\/[^/]+$/.test(repo)) {
-        throw new Error(`Invalid repository format: ${repo}. Must be in format "owner/repo"`);
-      }
+
+    const repoBranchRegex = /^[^/]+\/[^/]+:[^:]+$/;
+    if (!repoBranchRegex.test(repoEntry.upstream)) {
+      throw new Error(`Invalid "upstream" format: ${repoEntry.upstream}. Must be "owner/repo:branch"`);
     }
-    
-    // Set default branches if not specified
-    if (!account.devBranch) {
-      account.devBranch = 'dev';
-      logger.warn(`No development branch specified for account ${account.name || index}, using 'dev' as default`);
-    }
-    
-    if (!account.upstreamBranch) {
-      account.upstreamBranch = 'main';
-      logger.warn(`No upstream branch specified for account ${account.name || index}, using 'main' as default`);
+    if (!repoBranchRegex.test(repoEntry.fork)) {
+      throw new Error(`Invalid "fork" format: ${repoEntry.fork}. Must be "owner/repo:branch"`);
     }
   }
 
